@@ -39,6 +39,7 @@ public class SimpleImageServer {
         server.createContext("/api/process/stretch-h", new ProcessHandler("stretch-h"));
         server.createContext("/api/process/shrink-v", new ProcessHandler("shrink-v"));
         server.createContext("/api/process/color-filter", new ProcessHandler("color-filter"));
+        server.createContext("/api/process/grayscale", new ProcessHandler("grayscale"));
         server.setExecutor(null);
         server.start();
         System.out.println("SimpleImageServer started on http://localhost:8080");
@@ -96,6 +97,9 @@ public class SimpleImageServer {
                     out = ImageProcessor.colorFilter(input, r, g, b);
                     break;
                 }
+                case "grayscale":
+                    out = ImageProcessor.grayscale(input);
+                    break;
                 default:
                     out = input;
             }
@@ -119,12 +123,16 @@ public class SimpleImageServer {
     private static int[][] readImage(HttpExchange exchange, Map<String, String> q) {
         try {
             String imageUrl = q.get("imageUrl");
-            if (imageUrl != null && !imageUrl.isBlank()) {
+            if (imageUrl != null && imageUrl.trim().length() > 0) {
                 return ImageUtils.imgToTwoD(imageUrl);
             }
             try (InputStream is = exchange.getRequestBody()) {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                is.transferTo(baos);
+                byte[] buffer = new byte[8192];
+                int n;
+                while ((n = is.read(buffer)) > 0) {
+                    baos.write(buffer, 0, n);
+                }
                 byte[] body = baos.toByteArray();
                 if (body.length == 0) return null;
                 BufferedImage img = ImageIO.read(new ByteArrayInputStream(body));
@@ -138,11 +146,21 @@ public class SimpleImageServer {
     private static Map<String, String> queryParams(HttpExchange exchange) {
         Map<String, String> map = new HashMap<>();
         String raw = exchange.getRequestURI().getRawQuery();
-        if (raw == null || raw.isBlank()) return map;
+        if (raw == null || raw.trim().length() == 0) return map;
         for (String pair : raw.split("&")) {
             String[] kv = pair.split("=", 2);
-            String k = URLDecoder.decode(kv[0], StandardCharsets.UTF_8);
-            String v = kv.length > 1 ? URLDecoder.decode(kv[1], StandardCharsets.UTF_8) : "";
+            String k;
+            String v;
+            try {
+                k = URLDecoder.decode(kv[0], "UTF-8");
+            } catch (Exception e) {
+                k = kv[0];
+            }
+            try {
+                v = kv.length > 1 ? URLDecoder.decode(kv[1], "UTF-8") : "";
+            } catch (Exception e) {
+                v = kv.length > 1 ? kv[1] : "";
+            }
             map.put(k, v);
         }
         return map;
@@ -154,4 +172,3 @@ public class SimpleImageServer {
         exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
     }
 }
-

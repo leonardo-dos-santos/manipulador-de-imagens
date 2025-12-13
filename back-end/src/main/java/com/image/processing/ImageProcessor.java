@@ -79,6 +79,21 @@ public class ImageProcessor {
         return filteredImage;
     }
 
+    public static int[][] grayscale(int[][] imageTwoD) {
+        int[][] out = new int[imageTwoD.length][imageTwoD[0].length];
+        for (int i = 0; i < imageTwoD.length; i++) {
+            for (int j = 0; j < imageTwoD[i].length; j++) {
+                int[] rgba = getRGBAFromPixel(imageTwoD[i][j]);
+                int gray = (int)Math.round(0.299 * rgba[0] + 0.587 * rgba[1] + 0.114 * rgba[2]);
+                rgba[0] = gray;
+                rgba[1] = gray;
+                rgba[2] = gray;
+                out[i][j] = getColorIntValFromRGBA(rgba);
+            }
+        }
+        return out;
+    }
+
     public static int[][] paintRandomImage(int[][] canvas) {
         Random random = new Random();
         for (int i = 0; i < canvas.length; i++) {
@@ -114,4 +129,3 @@ public class ImageProcessor {
         return canvas;
     }
 }
-

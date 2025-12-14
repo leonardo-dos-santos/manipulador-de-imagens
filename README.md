@@ -92,8 +92,24 @@ npm run deploy
 ```
 Automaticamente implantado em: `https://leonardo-dos-santos.github.io/manipulador-de-imagens/`
 
-### Back-end
-Para produção, hospede em um servidor com Java 21 (ex.: Railway, Render, VPS). Atualize `VITE_API_BASE_URL` no front-end para a URL do back-end remoto.
+**Nota**: Para produção, crie um arquivo `.env.production` no diretório `front-end` com:
+```
+VITE_API_BASE_URL=https://sua-api-remota-aqui.onrender.com
+```
+Substitua pela URL do back-end remoto, então execute `npm run build` e `npm run deploy` novamente.
+
+### Back-end (Render - Gratuito)
+1. Acesse [render.com](https://render.com) e crie uma conta.
+2. Clique em "New" > "Web Service".
+3. Conecte seu repositório GitHub (`leonardo-dos-santos/manipulador-de-imagens`).
+4. Configure:
+   - **Branch**: `main`
+   - **Root Directory**: `back-end`
+   - **Build Command**: `mvn clean package`
+   - **Start Command**: `mvn exec:java -Dexec.mainClass="image.processing.SimpleImageServer"`
+5. Clique em "Create Web Service".
+6. Aguarde o deploy e copie a URL gerada (ex.: `https://manipulador-backend.onrender.com`).
+7. Atualize o `.env.production` no front-end com essa URL e reimplante o front-end.
 
 ## Desenvolvimento
 - **Back-end**: Maven para build e execução

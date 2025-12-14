@@ -19,14 +19,7 @@ import java.util.Optional;
 
 public class SimpleImageServer {
     public static void main(String[] args) throws Exception {
-        int port = 8080;
-        try {
-            String env = System.getenv("PORT");
-            if (env != null && env.trim().length() > 0) {
-                port = Integer.parseInt(env.trim());
-            }
-        } catch (Exception ignored) {}
-        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
+        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
         server.createContext("/api/health", exchange -> {
             setCors(exchange);
             if ("OPTIONS".equalsIgnoreCase(exchange.getRequestMethod())) {
@@ -49,7 +42,7 @@ public class SimpleImageServer {
         server.createContext("/api/process/grayscale", new ProcessHandler("grayscale"));
         server.setExecutor(null);
         server.start();
-        System.out.println("SimpleImageServer started on http://localhost:" + port);
+        System.out.println("SimpleImageServer started on http://localhost:8080");
     }
 
     static class ProcessHandler implements HttpHandler {
@@ -112,7 +105,6 @@ public class SimpleImageServer {
             }
             byte[] bytes = ImageUtils.twoDToJpegBytes(out);
             exchange.getResponseHeaders().add("Content-Type", "image/jpeg");
-            exchange.getResponseHeaders().add("Cache-Control", "no-store");
             exchange.sendResponseHeaders(200, bytes.length);
             exchange.getResponseBody().write(bytes);
             exchange.close();
@@ -177,6 +169,6 @@ public class SimpleImageServer {
     private static void setCors(HttpExchange exchange) {
         exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
         exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
-        exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type,Authorization,Accept");
+        exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
     }
 }

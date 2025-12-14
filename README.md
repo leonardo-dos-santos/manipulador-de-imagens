@@ -4,7 +4,7 @@ Aplicação web para manipulação de imagens com filtros como negativo, invers�
 
 ## Demo
 
-[Assista ao vídeo demonstrativo](docs/Manipulador-de-imagens.mp4)
+![Demonstração da aplicação](docs/manipulador-de-imagem.png)
 
 ## Como executar
 
@@ -12,8 +12,6 @@ Aplicação web para manipulação de imagens com filtros como negativo, invers�
 ```bash
 cd back-end
 mvn exec:java
-```
-Servidor roda em http://localhost:8080
 
 ### Front-end
 ```bash
@@ -21,7 +19,6 @@ cd front-end
 npm install
 npm run dev
 ```
-Acesse em http://localhost:5173
 
 ## Funcionalidades
 - Upload de imagem ou URL

@@ -11,14 +11,15 @@ public class ImageUtils {
     public static int[][] imgToTwoD(String inputFileOrLink) {
         try {
             BufferedImage image = null;
-            if (inputFileOrLink.substring(0, 4).toLowerCase().equals("http")) {
-                URL imageUrl = new URL(inputFileOrLink);
+            String s = inputFileOrLink == null ? "" : inputFileOrLink.trim();
+            if (s.length() >= 4 && s.substring(0, 4).toLowerCase().equals("http")) {
+                URL imageUrl = new URL(s);
                 image = ImageIO.read(imageUrl);
                 if (image == null) {
                     System.out.println("Falha ao obter imagem da URL fornecida.");
                 }
             } else {
-                image = ImageIO.read(new File(inputFileOrLink));
+                image = ImageIO.read(new File(s));
             }
             if (image == null) return null;
 

@@ -7,7 +7,7 @@ Aplicação para manipulação de imagens com front-end em React/Vite/Tailwind e
 - [![Abrir Demo](https://img.shields.io/badge/Abrir%20Demo-GitHub%20Pages-24292e?logo=github)](https://leonardo-dos-santos.github.io/manipulador-de-imagens/)
 
 ## Preview
-![Preview da aplicação](front-end/src/TeaserAPP.png)
+![Preview da aplicação](https://raw.githubusercontent.com/leonardo-dos-santos/manipulador-de-imagens/main/front-end/src/TeaserAPP.png)
 
 ## Estrutura
 - `front-end/`: aplicação React

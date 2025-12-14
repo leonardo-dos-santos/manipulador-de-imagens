@@ -19,7 +19,14 @@ import java.util.Optional;
 
 public class SimpleImageServer {
     public static void main(String[] args) throws Exception {
-        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+        int port = 8080;
+        try {
+            String env = System.getenv("PORT");
+            if (env != null && env.trim().length() > 0) {
+                port = Integer.parseInt(env.trim());
+            }
+        } catch (Exception ignored) {}
+        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/api/health", exchange -> {
             setCors(exchange);
             if ("OPTIONS".equalsIgnoreCase(exchange.getRequestMethod())) {
@@ -42,7 +49,7 @@ public class SimpleImageServer {
         server.createContext("/api/process/grayscale", new ProcessHandler("grayscale"));
         server.setExecutor(null);
         server.start();
-        System.out.println("SimpleImageServer started on http://localhost:8080");
+        System.out.println("SimpleImageServer started on http://localhost:" + port);
     }
 
     static class ProcessHandler implements HttpHandler {

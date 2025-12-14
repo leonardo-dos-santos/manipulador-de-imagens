@@ -1,5 +1,6 @@
 export async function processImage(endpoint: string, opts: { file?: File, imageUrl?: string, params?: Record<string, string | number> } = {}) {
-  const url = new URL(`http://localhost:8080${endpoint}`)
+  const base = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
+  const url = new URL(endpoint, base)
   if (opts.params) {
     Object.entries(opts.params).forEach(([k, v]) => url.searchParams.set(k, String(v)))
   }
@@ -15,4 +16,3 @@ export async function processImage(endpoint: string, opts: { file?: File, imageU
   const blob = await res.blob()
   return URL.createObjectURL(blob)
 }
-

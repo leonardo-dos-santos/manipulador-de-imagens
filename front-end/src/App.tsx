@@ -69,7 +69,7 @@ export default function App() {
               </div>
             </div>
             <div>
-              <label className="block text-sm">Trim pixels</label>
+              <label className="block text-sm">Pixels de corte</label>
               <input type="number" value={trim} onChange={e => setTrim(parseInt(e.target.value || '0'))} className="w-full border rounded px-2 py-1" />
             </div>
             <div className="flex flex-wrap gap-2">

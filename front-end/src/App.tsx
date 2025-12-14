@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { processImage } from './api'
 
 export default function App() {
@@ -33,11 +33,20 @@ export default function App() {
       <main className="flex-1 p-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="bg-white rounded-lg shadow p-4">
           <div className="space-y-3">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={e => setFile(e.target.files?.[0] ?? null)}
-            />
+            <div className="flex items-center gap-3">
+              <input
+                id="file-input"
+                ref={useRef<HTMLInputElement>(null)}
+                type="file"
+                accept="image/*"
+                onChange={e => setFile(e.target.files?.[0] ?? null)}
+                className="hidden"
+              />
+              <label htmlFor="file-input">
+                <span className="px-3 py-2 bg-gray-800 text-white rounded cursor-pointer">Selecionar arquivo</span>
+              </label>
+              <span className="text-sm text-gray-600">{file ? file.name : 'Nenhum arquivo selecionado'}</span>
+            </div>
             <input
               type="url"
               value={imageUrl}
@@ -47,15 +56,15 @@ export default function App() {
             />
             <div className="grid grid-cols-3 gap-2">
               <div>
-                <label className="block text-sm">Red</label>
+                <label className="block text-sm">Vermelho</label>
                 <input type="number" value={red} onChange={e => setRed(parseInt(e.target.value || '0'))} className="w-full border rounded px-2 py-1" />
               </div>
               <div>
-                <label className="block text-sm">Green</label>
+                <label className="block text-sm">Verde</label>
                 <input type="number" value={green} onChange={e => setGreen(parseInt(e.target.value || '0'))} className="w-full border rounded px-2 py-1" />
               </div>
               <div>
-                <label className="block text-sm">Blue</label>
+                <label className="block text-sm">Azul</label>
                 <input type="number" value={blue} onChange={e => setBlue(parseInt(e.target.value || '0'))} className="w-full border rounded px-2 py-1" />
               </div>
             </div>

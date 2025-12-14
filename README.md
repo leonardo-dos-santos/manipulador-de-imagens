@@ -8,7 +8,7 @@ Aplicação web para manipulação de imagens. Permite fazer upload de uma image
 - **Deploy**: GitHub Pages (front-end), servidor local/remoto (back-end)
 
 ## Demo
-- 🌐 [Abrir Demo](https://leonardo-dos-santos.github.io/manipulador-de-imagens/)
+- 🌐 [Abrir Demo](https://amazing-site.netlify.app/) (substitua pela URL do Netlify após deploy)
 - 📱 Interface responsiva para desktop e mobile
 
 ## Preview
@@ -84,19 +84,17 @@ A aplicação estará disponível em `http://localhost:5173`
 
 ## Deploy
 
-### Front-end (GitHub Pages)
-```bash
-cd front-end
-npm run build
-npm run deploy
-```
-Automaticamente implantado em: `https://leonardo-dos-santos.github.io/manipulador-de-imagens/`
-
-**Nota**: Para produção, crie um arquivo `.env.production` no diretório `front-end` com:
-```
-VITE_API_BASE_URL=https://sua-api-remota-aqui.onrender.com
-```
-Substitua pela URL do back-end remoto, então execute `npm run build` e `npm run deploy` novamente.
+### Front-end (Netlify)
+1. Acesse [netlify.com](https://netlify.com) e crie uma conta.
+2. Clique em "Add new site" > "Import an existing project".
+3. Conecte seu repositório GitHub (`leonardo-dos-santos/manipulador-de-imagens`).
+4. Configure:
+   - **Branch**: `main`
+   - **Build command**: `npm ci && npm run build`
+   - **Publish directory**: `front-end/dist`
+5. Adicione variável de ambiente: `VITE_API_BASE_URL` com a URL do back-end remoto (ex.: `https://manipulador-backend.onrender.com`).
+6. Clique em "Deploy site".
+7. Após o deploy, copie a URL gerada (ex.: `https://amazing-site.netlify.app`).
 
 ### Back-end (Render - Gratuito)
 1. Acesse [render.com](https://render.com) e crie uma conta.
@@ -109,7 +107,7 @@ Substitua pela URL do back-end remoto, então execute `npm run build` e `npm run
    - **Start Command**: `mvn exec:java -Dexec.mainClass="image.processing.SimpleImageServer"`
 5. Clique em "Create Web Service".
 6. Aguarde o deploy e copie a URL gerada (ex.: `https://manipulador-backend.onrender.com`).
-7. Atualize o `.env.production` no front-end com essa URL e reimplante o front-end.
+7. Atualize a variável `VITE_API_BASE_URL` no Netlify com essa URL.
 
 ## Desenvolvimento
 - **Back-end**: Maven para build e execução

@@ -6,6 +6,12 @@ Aplicação web para manipulação de imagens com filtros como negativo, invers�
 
 ![Demonstração da aplicação](docs/manipulador-de-imagem.png)
 
+## Tecnologias
+
+- **Front-end**: React 18, TypeScript, Vite, Tailwind CSS
+- **Back-end**: Java 21, HttpServer (sem frameworks externos)
+- **Build**: Maven, Node.js
+
 ## Como executar
 
 ### Back-end

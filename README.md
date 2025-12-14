@@ -8,7 +8,6 @@ Aplicação web para manipulação de imagens. Permite fazer upload de uma image
 - **Deploy**: GitHub Pages (front-end), servidor local/remoto (back-end)
 
 ## Demo
-- 🌐 [Abrir Demo](https://amazing-site.netlify.app/) (substitua pela URL do Netlify após deploy)
 - 📱 Interface responsiva para desktop e mobile
 
 ## Preview

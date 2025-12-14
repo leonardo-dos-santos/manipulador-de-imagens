@@ -1,4 +1,4 @@
-package com.image.processing;
+package image.processing;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -12,13 +12,14 @@ public class ImageUtils {
         try {
             BufferedImage image = null;
             String s = inputFileOrLink == null ? "" : inputFileOrLink.trim();
-            if (s.length() >= 4 && s.substring(0, 4).toLowerCase().equals("http")) {
-                URL imageUrl = new URL(s);
+            if (s.toLowerCase().startsWith("http")) {
+                URL imageUrl = java.net.URI.create(s).toURL();
                 image = ImageIO.read(imageUrl);
                 if (image == null) {
                     System.out.println("Falha ao obter imagem da URL fornecida.");
                 }
             } else {
+                if (s.isEmpty()) return null;
                 image = ImageIO.read(new File(s));
             }
             if (image == null) return null;

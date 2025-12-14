@@ -1,8 +1,8 @@
-package com.image.processing;
+package image.processing;
 
 import java.awt.Color;
 import java.util.Random;
-import static com.image.processing.ImageUtils.*;
+import static image.processing.ImageUtils.*;
 
 public class ImageProcessor {
     public static int[][] trimBorders(int[][] imageTwoD, int pixelCount) {

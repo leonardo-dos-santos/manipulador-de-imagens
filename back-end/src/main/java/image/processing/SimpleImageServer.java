@@ -1,4 +1,4 @@
-package com.image.processing;
+package image.processing;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -58,6 +58,8 @@ public class SimpleImageServer {
                 return;
             }
             if (!"POST".equalsIgnoreCase(exchange.getRequestMethod())) {
+                setCors(exchange);
+                exchange.getResponseHeaders().add("Allow", "POST, OPTIONS");
                 exchange.sendResponseHeaders(405, -1);
                 exchange.close();
                 return;
@@ -65,49 +67,60 @@ public class SimpleImageServer {
             Map<String, String> q = queryParams(exchange);
             int[][] input = readImage(exchange, q);
             if (input == null) {
+                setCors(exchange);
                 byte[] err = "invalid image".getBytes(StandardCharsets.UTF_8);
+                exchange.getResponseHeaders().add("Content-Type", "text/plain; charset=utf-8");
                 exchange.sendResponseHeaders(400, err.length);
                 exchange.getResponseBody().write(err);
                 exchange.close();
                 return;
             }
-            int[][] out;
-            switch (op) {
-                case "trim": {
-                    int pixelCount = parseInt(q.get("pixelCount")).orElse(10);
-                    out = ImageProcessor.trimBorders(input, pixelCount);
-                    break;
+            try {
+                int[][] out;
+                switch (op) {
+                    case "trim": {
+                        int pixelCount = parseInt(q.get("pixelCount")).orElse(10);
+                        out = ImageProcessor.trimBorders(input, pixelCount);
+                        break;
+                    }
+                    case "negative":
+                        out = ImageProcessor.negativeColor(input);
+                        break;
+                    case "invert":
+                        out = ImageProcessor.invertImage(input);
+                        break;
+                    case "stretch-h":
+                        out = ImageProcessor.stretchHorizontally(input);
+                        break;
+                    case "shrink-v":
+                        out = ImageProcessor.shrinkVertically(input);
+                        break;
+                    case "color-filter": {
+                        int r = parseInt(q.get("red")).orElse(0);
+                        int g = parseInt(q.get("green")).orElse(0);
+                        int b = parseInt(q.get("blue")).orElse(0);
+                        out = ImageProcessor.colorFilter(input, r, g, b);
+                        break;
+                    }
+                    case "grayscale":
+                        out = ImageProcessor.grayscale(input);
+                        break;
+                    default:
+                        out = input;
                 }
-                case "negative":
-                    out = ImageProcessor.negativeColor(input);
-                    break;
-                case "invert":
-                    out = ImageProcessor.invertImage(input);
-                    break;
-                case "stretch-h":
-                    out = ImageProcessor.stretchHorizontally(input);
-                    break;
-                case "shrink-v":
-                    out = ImageProcessor.shrinkVertically(input);
-                    break;
-                case "color-filter": {
-                    int r = parseInt(q.get("red")).orElse(0);
-                    int g = parseInt(q.get("green")).orElse(0);
-                    int b = parseInt(q.get("blue")).orElse(0);
-                    out = ImageProcessor.colorFilter(input, r, g, b);
-                    break;
-                }
-                case "grayscale":
-                    out = ImageProcessor.grayscale(input);
-                    break;
-                default:
-                    out = input;
+                byte[] bytes = ImageUtils.twoDToJpegBytes(out);
+                exchange.getResponseHeaders().add("Content-Type", "image/jpeg");
+                exchange.sendResponseHeaders(200, bytes.length);
+                exchange.getResponseBody().write(bytes);
+                exchange.close();
+            } catch (Exception e) {
+                setCors(exchange);
+                byte[] err = "processing error".getBytes(StandardCharsets.UTF_8);
+                exchange.getResponseHeaders().add("Content-Type", "text/plain; charset=utf-8");
+                exchange.sendResponseHeaders(500, err.length);
+                exchange.getResponseBody().write(err);
+                exchange.close();
             }
-            byte[] bytes = ImageUtils.twoDToJpegBytes(out);
-            exchange.getResponseHeaders().add("Content-Type", "image/jpeg");
-            exchange.sendResponseHeaders(200, bytes.length);
-            exchange.getResponseBody().write(bytes);
-            exchange.close();
         }
 
         private static Optional<Integer> parseInt(String s) {
@@ -169,6 +182,6 @@ public class SimpleImageServer {
     private static void setCors(HttpExchange exchange) {
         exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
         exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
-        exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
+        exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type, Accept");
     }
 }

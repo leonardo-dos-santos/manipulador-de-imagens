@@ -5,6 +5,9 @@ export default defineConfig(({ mode }) => ({
   plugins: [react()],
   base: mode === 'production' ? '/manipulador-de-imagens/' : '/',
   server: {
-    port: 5173
+    port: 5173,
+    proxy: {
+      '/api': 'http://localhost:8080'
+    }
   }
 }))

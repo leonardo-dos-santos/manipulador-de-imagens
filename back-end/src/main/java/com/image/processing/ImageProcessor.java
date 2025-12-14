@@ -6,6 +6,7 @@ import static com.image.processing.ImageUtils.*;
 
 public class ImageProcessor {
     public static int[][] trimBorders(int[][] imageTwoD, int pixelCount) {
+        pixelCount = Math.max(0, pixelCount);
         if (imageTwoD.length > pixelCount * 2 && imageTwoD[0].length > pixelCount * 2) {
             int[][] trimmedImg = new int[imageTwoD.length - pixelCount * 2][imageTwoD[0].length - pixelCount * 2];
             for (int i = 0; i < trimmedImg.length; i++) {

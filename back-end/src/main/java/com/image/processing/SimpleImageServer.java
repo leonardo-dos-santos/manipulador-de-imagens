@@ -112,6 +112,7 @@ public class SimpleImageServer {
             }
             byte[] bytes = ImageUtils.twoDToJpegBytes(out);
             exchange.getResponseHeaders().add("Content-Type", "image/jpeg");
+            exchange.getResponseHeaders().add("Cache-Control", "no-store");
             exchange.sendResponseHeaders(200, bytes.length);
             exchange.getResponseBody().write(bytes);
             exchange.close();
@@ -176,6 +177,6 @@ public class SimpleImageServer {
     private static void setCors(HttpExchange exchange) {
         exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
         exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
-        exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
+        exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type,Authorization,Accept");
     }
 }
